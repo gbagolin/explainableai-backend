@@ -19,4 +19,4 @@ def handle_request(request):
 def handle_request(request):
     return response.text('Hello world!')
 
-app.run(host='0.0.0.0', port=1337, workers=1)
+app.run(host='127.0.0.1', port=1337, workers=1)

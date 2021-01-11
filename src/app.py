@@ -3,7 +3,7 @@ from sanic.response import json
 from sanic import response
 from sanic_cors import CORS, cross_origin
 
-app = Sanic("server")
+app = Sanic("app")
 CORS(app)
 
 # @app.route("/api", methods=["POST"])
@@ -12,6 +12,10 @@ CORS(app)
 #     return json(rule)
 
 @app.route('/api')
+def handle_request(request):
+    return response.text('Hello world!')
+
+@app.route('/')
 def handle_request(request):
     return response.text('Hello world!')
 

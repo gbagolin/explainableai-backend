@@ -46,7 +46,7 @@ class RuleTemplate:
         for hard_constraint in self.hard_constraint: 
             self.solver.add(hard_constraint)
     
-    def add_constraint(self, *formula):
+    def add_constraint(self, formula):
         for constraint in formula:
             self.solver.add(constraint)
             self.hard_constraint.append(constraint)

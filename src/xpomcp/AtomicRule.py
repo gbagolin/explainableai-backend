@@ -44,7 +44,7 @@ class AtomicRule:
         self.variables.update(newVariable)
         return x
 
-    def addConstraint(self, *formula):
+    def addConstraint(self, formula):
         '''
         Create a z3 formula representing a constraint given a formula.
         eg: Rule.addConstraint(x1 == 1, x2 == 2, x3 == 3)
@@ -66,7 +66,7 @@ class AtomicRule:
         self.variable_constraint_set.append(variablesInFormula)
         self.constraints.append(and_constraint_list)
         
-    def addHardConstraint(self,*constraints):
+    def addHardConstraint(self,constraints):
         '''
         Add hard constraints 
         ''' 

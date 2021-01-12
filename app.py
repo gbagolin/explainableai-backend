@@ -15,16 +15,15 @@ import z3
 import pdb
 
 '''States for Tiger problem '''
-tiger_left = State("tiger left")
-tiger_right = State("tiger right")
+TIGER_LEFT = State("tiger left")
+TIGER_RIGHT = State("tiger right")
 '''States for Velocity regulation problem '''
-easy = State(0)
-intermediate = State(1)
-difficult = State(2)
+EASY = State(0)
+INTERMEDIATE = State(1)
+DIFFICULT = State(2)
 
 app = Flask(__name__)
 CORS(app)
-
 
 @app.route('/api', methods=['POST'])
 def synthetize_rule():
@@ -39,19 +38,19 @@ def synthetize_rule():
     if data['atomic_rule']['problem'] == "Tiger":
         ''' Initialization of Tiger problem '''
         problem = Tiger_Problem(xes_log='./src/xpomcp/tracce/tiger_correct.xes',
-                                num_traces_to_analyze=100, states=[tiger_left, tiger_right])
+                                num_traces_to_analyze=100, states=[TIGER_LEFT, TIGER_RIGHT])
         map_belief_to_rule_sintax = {
-            "tiger_left": tiger_left.get_probability(),
-            "tiger_right": tiger_right.get_probability()
+            "tiger_left": TIGER_LEFT.get_probability(),
+            "tiger_right": TIGER_RIGHT.get_probability()
         }
     else:
         ''' Initialization of Velocity regulation problem '''
         problem = Velocity_Regulation_Problem(xes_log='./src/xpomcp/tracce/obstacle_avoidance_10.xes', states=[
-                                              intermediate, difficult, easy], num_traces_to_analyze=100)
+                                              INTERMEDIATE, DIFFICULT, EASY], num_traces_to_analyze=100)
         map_belief_to_rule_sintax = {
-            "easy": easy.get_probability(),
-            "intermediate": intermediate.get_probability(),
-            "difficult": difficult.get_probability()
+            "easy": EASY.get_probability(),
+            "intermediate": INTERMEDIATE.get_probability(),
+            "difficult": DIFFICULT.get_probability()
         }
 
     rule = AtomicRule(actions=[data['atomic_rule']['action']], problem=problem)

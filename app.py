@@ -89,10 +89,10 @@ def synthetize_rule():
                 str(map_belief_to_rule_sintax[constraint['state']]),
                 {}, dict(**map_variable_string_to_object,
                          **map_belief_to_rule_sintax,
-                         **{"single_constraint": single_constraint,
+                         **{"constraint": constraint,
                             "map_belief_to_rule_sintax": map_belief_to_rule_sintax}))
             print(el)
-            rule.addConstraint(el)
+            rule.addConstraint([el])
     rule.solve()
     return "ok"
 

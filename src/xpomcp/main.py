@@ -1,31 +1,21 @@
-from RuleTemplate import RuleTemplate
-from AtomicRule import AtomicRule
-from Velocity_Regulation_Problem import Velocity_Regulation_Problem
-from Tiger_Problem import Tiger_Problem
-from State import State
+from .RuleTemplate import RuleTemplate
+from .AtomicRule import AtomicRule
+from .Velocity_Regulation_Problem import Velocity_Regulation_Problem
+from .Tiger_Problem import Tiger_Problem
+from .State import State
 
 import sys
 import z3
 import pdb
 
-if __name__ == "__main__":
+
+def test(): 
     # parse input files
-    xes_log = []
-    if len(sys.argv) >= 2:
-        for i in range(1,len(sys.argv)): 
-            xes_log.append(str(sys.argv[i]))
-    else:
-        raise FileNotFoundError("Please, provide the trace directory")
-    
-    max_traces = None
-    if len(sys.argv) == 3: 
-        max_traces = int(sys.argv[2])
     
     tiger_left = State("tiger left")
     tiger_right = State("tiger right")
     
-    problem = Tiger_Problem(xes_log=xes_log[0],num_traces_to_analyze = max_traces,states = [tiger_left,tiger_right])
-
+    problem = Tiger_Problem(xes_log='./src/xpomcp/tracce/tiger_correct.xes', num_traces_to_analyze= 100, states = [tiger_left,tiger_right])
     rule1 = AtomicRule(actions = ["open left"], problem = problem)
     x1 = rule1.declareVariable('x1')
     rule1.addConstraint(x1 >= tiger_right.get_probability())

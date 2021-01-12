@@ -4,8 +4,8 @@ import random
 
 from .utilities.util import *
 from .Problem import *
-from . import Result
-from . import Run 
+from .Result import Result
+from .Run import Run 
 
 #######
 # XES #

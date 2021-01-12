@@ -1,4 +1,4 @@
-from utilities.util import *
+from .utilities.util import *
 
 class Result:
 

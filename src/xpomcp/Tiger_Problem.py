@@ -2,10 +2,10 @@
 import xml.etree.ElementTree as ET
 import random
 
-from utilities.util import *
-from Problem import Problem
-from Result import Result
-from Run import Run 
+from .utilities.util import *
+from .Problem import *
+from . import Result
+from . import Run 
 
 #######
 # XES #

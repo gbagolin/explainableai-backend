@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import random
 from abc import ABC, abstractmethod
 
-from utilities.util import * 
+from .utilities.util import * 
 
 
 class Problem:

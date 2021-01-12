@@ -2,8 +2,8 @@
 import xml.etree.ElementTree as ET
 
 import random
-from utilities.util import *
-from Problem import Problem
+from .utilities.util import *
+from .Problem import *
 
 #######
 # XES #

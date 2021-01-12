@@ -5,13 +5,13 @@ import random
 import copy
 import pdb
 
-from Problem import Problem
-from DummyVar import DummyVar
-from Constraint import Constraint
-from exceptions.OperandError import OperandError
-from utilities.util import *
-from Result import Result
-from Run import Run
+from . import Problem
+from . import DummyVar
+from . import Constraint
+from .exceptions.OperandError import OperandError
+# from utilities.util import *
+from . import Result
+from . import Run
 
 class RuleTemplate: 
     def __init__(self,rule_list,problem,threshold):

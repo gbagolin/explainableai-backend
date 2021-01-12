@@ -11,18 +11,21 @@ from .Problem import *
 
 class Velocity_Regulation_Problem(Problem):
 
-    def __init__(self, xes_log = None,states = [0,1,2],actions = [0,1,2],beliefs = None):
+    def __init__(self, xes_log = None,states = [0,1,2],actions = [0,1,2],beliefs = None,num_traces_to_analyze = None):
         super().__init__(xes_log,states,actions)
         self.segments_in_runs = []
-        self.parse_xes(xes = xes_log)
+        self.parse_xes(xes = xes_log, num_traces_to_analyze = num_traces_to_analyze)
 
-    def parse_xes(self, xes):
+    def parse_xes(self, xes, num_traces_to_analyze):
         """
         Parse xes log and build data from traces
         """
         log = self.xes_tree.getroot()
-
+        count = 0
         for trace in log.findall('xes:trace', XES_NES):
+            if num_traces_to_analyze != None and count > num_traces_to_analyze: 
+                return
+            count += 1
             # FIXME: this is probably redundant in xes
             self.run_folders.append('run {}'.format(
                 int(node_from_key(trace, 'run').attrib['value'])))

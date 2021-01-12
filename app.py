@@ -46,7 +46,7 @@ def synthetize_rule():
         }
     else:
         ''' Initialization of Velocity regulation problem '''
-        problem = Velocity_Regulation_Problem(xes_log='./src/xpomcp/tracce/tiger_correct.xes', states=[
+        problem = Velocity_Regulation_Problem(xes_log='./src/xpomcp/tracce/obstacle_avoidance_10.xes', states=[
                                               intermediate, difficult, easy], num_traces_to_analyze=100)
         map_belief_to_rule_sintax = {
             "easy": easy.get_probability(),

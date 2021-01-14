@@ -16,24 +16,24 @@ def test():
     tiger_right = State("tiger right")
     
     problem = Tiger_Problem(xes_log='./src/xpomcp/tracce/tiger_correct.xes', num_traces_to_analyze= 100, states = [tiger_left,tiger_right])
-    rule1 = AtomicRule(actions = ["open left"], problem = problem)
-    x1 = rule1.declareVariable('x1')
-    rule1.addConstraint(x1 >= tiger_right.get_probability())
-    #rule.solve()
-    
-    rule2 = AtomicRule(actions = ["open right"], problem = problem)
-    x2 = rule2.declareVariable('x2')
-    rule2.addConstraint(x2 >= tiger_left.get_probability())
-    #rule.solve()
+    # rule1 = AtomicRule(actions = ["open left"], problem = problem)
+    # x1 = rule1.declareVariable('x1')
+    # rule1.addConstraint(x1 >= tiger_right.get_probability())
+    # #rule.solve()
+    #
+    # rule2 = AtomicRule(actions = ["open right"], problem = problem)
+    # x2 = rule2.declareVariable('x2')
+    # rule2.addConstraint(x2 >= tiger_left.get_probability())
+    # #rule.solve()
     
     rule3 = AtomicRule(actions = ["listen"], problem = problem)
     x3 = rule3.declareVariable('x3')
     x4 = rule3.declareVariable('x4')
     rule3.addConstraint(x3 <= tiger_left.get_probability(), x4 <= tiger_right.get_probability())
-    
-    final_rule = RuleTemplate([rule1,rule2,rule3], problem = problem,threshold = 0.10)
-    final_rule.add_constraint(x3 == x4, x1 == x2,x1 >= 0.90)
-    final_rule.solve()
+    rule3.solve()
+    # final_rule = RuleTemplate([rule1,rule2,rule3], problem = problem,threshold = 0.10)
+    # final_rule.add_constraint(x3 == x4, x1 == x2,x1 >= 0.90)
+    # final_rule.solve()
     
     
     # easy = State(0)

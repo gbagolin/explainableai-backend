@@ -80,6 +80,17 @@ def synthetize_rule():
                             "map_belief_to_rule_sintax": map_belief_to_rule_sintax}))
             constraint.append(el)
         rule.addConstraint(constraint)
+    hard_constraints = []
+
+    for hard_constraint in data['atomic_rule']['hard_constraint']:
+        el = eval(
+            hard_constraint['variable'] +
+            hard_constraint['operator'] +
+            str(hard_constraint['probability']),
+            {}, dict(**map_variable_string_to_object))
+        hard_constraints.append(el)
+
+    rule.addHardConstraint(hard_constraints)
     rule.solve()
     return "ok"
 

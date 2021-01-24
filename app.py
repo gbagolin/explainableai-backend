@@ -22,23 +22,31 @@ EASY = State(0)
 INTERMEDIATE = State(1)
 DIFFICULT = State(2)
 
+MAP_TRACES = {
+    "Tiger Correct": "tiger_correct.xes",
+    "Tiger 40": "dataset_tiger_40.xes",
+    "Tiger 60": "dataset_tiger_60.xes",
+    "Tiger 80": "dataset_tiger_80.xes"
+}
+
 app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/api', methods=['POST'])
+@app.route('/api/send_rule', methods=['POST'])
 def synthetize_rule():
     # test()
     data = request.get_json()
     map_variable_string_to_object = dict()
     map_belief_to_rule_sintax = dict()
 
+
     problem = None
     rule = None
-
+    trace = data['atomic_rule']['trace']
     if data['atomic_rule']['problem'] == "Tiger":
         ''' Initialization of Tiger problem '''
-        problem = Tiger_Problem(xes_log='./src/xpomcp/tracce/tiger_correct.xes',
+        problem = Tiger_Problem(xes_log=f'./src/xpomcp/tracce/{MAP_TRACES[trace]}',
                                 num_traces_to_analyze=100, states=[TIGER_LEFT, TIGER_RIGHT])
         map_belief_to_rule_sintax = {
             "tiger left": TIGER_LEFT.get_probability(),
@@ -99,6 +107,11 @@ def synthetize_rule():
 def helloWorld():
     return "Hello, cross-origin-world!"
 
+@app.route("/api/traces", methods=['GET'])
+def getTraces():
+    return jsonify(
+        traces = ['Tiger correct', 'Tiger 40','Tiger 60','Tiger 80']
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)

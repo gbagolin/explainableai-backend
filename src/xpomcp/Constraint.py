@@ -18,6 +18,9 @@ class Constraint:
             return "{} {} {}".format(self.belief,self.operator,self.variable)
         else: 
             return "{} {} {}".format(self.state,self.operator,self.variable)
+
+    def get_constraint(self):
+        return "{} {} {}".format(self.state, self.operator, self.variable)
         
     
     

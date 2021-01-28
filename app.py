@@ -2,11 +2,14 @@ from flask import Flask
 from flask import request, jsonify
 from flask_cors import CORS
 
+import plotly.graph_objects as go
+
 from src.xpomcp.RuleTemplate import RuleTemplate
 from src.xpomcp.AtomicRule import AtomicRule
 from src.xpomcp.Velocity_Regulation_Problem import Velocity_Regulation_Problem
 from src.xpomcp.Tiger_Problem import Tiger_Problem
 from src.xpomcp.State import State
+from DrawGraphs import DrawGraphs
 
 from src.xpomcp.main import *
 
@@ -23,7 +26,7 @@ INTERMEDIATE = State(1)
 DIFFICULT = State(2)
 
 MAP_TRACES = {
-    "Tiger Correct": "tiger_correct.xes",
+    "Tiger correct": "tiger_correct.xes",
     "Tiger 40": "dataset_tiger_40.xes",
     "Tiger 60": "dataset_tiger_60.xes",
     "Tiger 80": "dataset_tiger_80.xes"
@@ -40,22 +43,23 @@ def synthetize_rule():
     map_variable_string_to_object = dict()
     map_belief_to_rule_sintax = dict()
 
-
     problem = None
     rule = None
     trace = data['atomic_rule']['trace']
     if data['atomic_rule']['problem'] == "Tiger":
         ''' Initialization of Tiger problem '''
         problem = Tiger_Problem(xes_log=f'./src/xpomcp/tracce/{MAP_TRACES[trace]}',
-                                num_traces_to_analyze=100, states=[TIGER_LEFT, TIGER_RIGHT])
+                                num_traces_to_analyze=100,
+                                states=[TIGER_LEFT, TIGER_RIGHT])
         map_belief_to_rule_sintax = {
             "tiger left": TIGER_LEFT.get_probability(),
             "tiger right": TIGER_RIGHT.get_probability()
         }
     else:
         ''' Initialization of Velocity regulation problem '''
-        problem = Velocity_Regulation_Problem(xes_log='./src/xpomcp/tracce/obstacle_avoidance_10.xes', states=[
-            INTERMEDIATE, DIFFICULT, EASY], num_traces_to_analyze=100)
+        problem = Velocity_Regulation_Problem(xes_log='./src/xpomcp/tracce/obstacle_avoidance_10.xes',
+                                              states=[INTERMEDIATE, DIFFICULT, EASY],
+                                              num_traces_to_analyze=100)
         map_belief_to_rule_sintax = {
             "easy": EASY.get_probability(),
             "intermediate": INTERMEDIATE.get_probability(),
@@ -100,18 +104,25 @@ def synthetize_rule():
 
     rule.addHardConstraint(hard_constraints)
     rule.solve()
-    return "ok"
 
+    constraints_synthetized = rule.result.get_constraint_synthetized()
+    anomalies = list(map(lambda x: x.to_dict(), rule.result.all_rules_unsatisfied))
 
-@app.route("/", methods=['POST', 'GET'])
-def helloWorld():
-    return "Hello, cross-origin-world!"
+    return jsonify({
+        "rule": constraints_synthetized,
+        "anomalies": anomalies
+    })
+
 
 @app.route("/api/traces", methods=['GET'])
 def getTraces():
     return jsonify(
-        traces = ['Tiger correct', 'Tiger 40','Tiger 60','Tiger 80']
+        traces=['Tiger correct',
+                'Tiger 40',
+                'Tiger 60',
+                'Tiger 80']
     )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -7,7 +7,17 @@ class Run:
         self.beliefs = beliefs # list((state,belief))
         self.hellinger_distance = hellinger_distance
         self.is_anomaly = is_anomaly
-    
+
+    def to_dict(self):
+        return {
+            "run": self.run,
+            "step": self.step,
+            "action": self.action,
+            "beliefs": self.beliefs,
+            "hellinger_distance": self.hellinger_distance,
+            "is_anomaly": self.is_anomaly
+        }
+
     def __str__(self): 
         to_return = ""
         
@@ -16,8 +26,9 @@ class Run:
             
         to_return += "{} step {}: action {} with belief ".format(self.run,self.step,self.action)
         
-        for bel in self.beliefs: 
-            state, belief = bel
+        for bel in self.beliefs:
+            state = bel['state']
+            belief = bel['belief']
             to_return += 'P_{} = {:.3f} '.format(state,belief)
         
         if self.hellinger_distance != None:

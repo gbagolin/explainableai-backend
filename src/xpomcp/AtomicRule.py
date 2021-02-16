@@ -159,7 +159,7 @@ class AtomicRule:
 
         total_cost = z3.Sum(cost)
         self.solver.add(interval_cost == total_cost)
-        self.solver.minimize(interval_cost)
+        self.solver.maximize(interval_cost)
 
         # check if SAT or UNSAT
         print('Check Formulas')
@@ -255,8 +255,10 @@ class AtomicRule:
                         "belief": self.problem.belief_in_runs[soft.run][soft.step][state]
                     }))
 
-            run = Run(run=self.problem.run_folders[soft.run], step=soft.step,
-                      action=self.problem.actions_in_runs[soft.run][soft.step], beliefs=state_beliefs,
+            run = Run(run=self.problem.run_folders[soft.run], 
+                      step=soft.step,
+                      action=self.problem.actions_in_runs[soft.run][soft.step], 
+                      beliefs=state_beliefs,
                       hellinger_distance=hel, is_anomaly=is_anomaly)
             self.result.add_run(run)
             failed_step_counter += 1

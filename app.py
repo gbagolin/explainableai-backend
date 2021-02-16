@@ -2,14 +2,12 @@ from flask import Flask
 from flask import request, jsonify
 from flask_cors import CORS
 
-import plotly.graph_objects as go
 
 from src.xpomcp.RuleTemplate import RuleTemplate
 from src.xpomcp.AtomicRule import AtomicRule
 from src.xpomcp.Velocity_Regulation_Problem import Velocity_Regulation_Problem
 from src.xpomcp.Tiger_Problem import Tiger_Problem
 from src.xpomcp.State import State
-from DrawGraphs import DrawGraphs
 
 from src.xpomcp.main import *
 
@@ -25,11 +23,26 @@ EASY = State(0)
 INTERMEDIATE = State(1)
 DIFFICULT = State(2)
 
+'''
+MAP BETWEEN ACTION AND STRING. 
+'''
+
+MAP_ACTIONS = {
+    "slow" : 0,
+    "medium": 1,
+    "fast": 2, 
+    "open left": "open left",
+    "open right": "open right",
+    "listen": "listen",
+}
+
 MAP_TRACES = {
     "Tiger correct": "tiger_correct.xes",
     "Tiger 40": "dataset_tiger_40.xes",
     "Tiger 60": "dataset_tiger_60.xes",
-    "Tiger 80": "dataset_tiger_80.xes"
+    "Tiger 80": "dataset_tiger_80.xes",
+    "Velocity regulation 10": "obstacle_avoidance_10.xes",
+    "Velocity regulation 100": "obstacle_avoidance_100.xes",
 }
 
 app = Flask(__name__)
@@ -55,18 +68,21 @@ def synthetize_rule():
             "tiger left": TIGER_LEFT.get_probability(),
             "tiger right": TIGER_RIGHT.get_probability()
         }
+        states = ["tiger left", "tiger right"]
     else:
         ''' Initialization of Velocity regulation problem '''
-        problem = Velocity_Regulation_Problem(xes_log='./src/xpomcp/tracce/obstacle_avoidance_10.xes',
-                                              states=[INTERMEDIATE, DIFFICULT, EASY],
-                                              num_traces_to_analyze=100)
+        problem = Velocity_Regulation_Problem(xes_log=f'./src/xpomcp/tracce/{MAP_TRACES[trace]}',
+                                              states=[EASY, INTERMEDIATE, DIFFICULT],
+                                            )
         map_belief_to_rule_sintax = {
-            "easy": EASY.get_probability(),
-            "intermediate": INTERMEDIATE.get_probability(),
-            "difficult": DIFFICULT.get_probability()
+            "low": EASY.get_probability(),
+            "medium": INTERMEDIATE.get_probability(),
+            "high": DIFFICULT.get_probability()
         }
 
-    rule = AtomicRule(actions=[data['atomic_rule']['action']], problem=problem)
+        states = ["low", "medium", "high"]
+    #TODO: create the list of actions out. 
+    rule = AtomicRule(actions=[MAP_ACTIONS[data["atomic_rule"]["action"]]], problem=problem)
 
     for variable in data['atomic_rule']['variables']:
         variable_name = 'x' + variable
@@ -106,21 +122,26 @@ def synthetize_rule():
     rule.solve()
 
     constraints_synthetized = rule.result.get_constraint_synthetized()
+    actions = rule.result.rule_obj.actions
     anomalies = list(map(lambda x: x.to_dict(), rule.result.all_rules_unsatisfied))
 
     return jsonify({
         "rule": constraints_synthetized,
-        "anomalies": anomalies
+        "anomalies": anomalies,
+        "states": states,
+        "actions": actions
     })
 
-
 @app.route("/api/traces", methods=['GET'])
-def getTraces():
+def get_traces():
     return jsonify(
         traces=['Tiger correct',
                 'Tiger 40',
                 'Tiger 60',
-                'Tiger 80']
+                'Tiger 80',
+                'Velocity regulation 10',
+                'Velocity regulation 100',
+                ]
     )
 
 

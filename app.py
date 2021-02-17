@@ -29,13 +29,18 @@ MAP BETWEEN ACTION AND STRING.
 MAP_STATES_TO_FRONTEND = {
     0 : "low",
     1 : "medium",
-    2 : "high"
+    2 : "high",
+    "tiger left" : "tiger left",
+    "tiger right" : "tiger right"
 }
 
 MAP_ACTIONS_TO_FRONTEND = {
     0 : "slow",
     1 : "medium",
     2 : "fast",
+    "open left": "open left",
+    "open right": "open right",
+    "listen": "listen"
 }
 
 MAP_ACTIONS_TO_BACKEND = {

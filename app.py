@@ -22,12 +22,23 @@ TIGER_RIGHT = State("tiger right")
 EASY = State(0)
 INTERMEDIATE = State(1)
 DIFFICULT = State(2)
-
 '''
 MAP BETWEEN ACTION AND STRING. 
 '''
 
-MAP_ACTIONS = {
+MAP_STATES_TO_FRONTEND = {
+    0 : "low",
+    1 : "medium",
+    2 : "high"
+}
+
+MAP_ACTIONS_TO_FRONTEND = {
+    0 : "slow",
+    1 : "medium",
+    2 : "fast",
+}
+
+MAP_ACTIONS_TO_BACKEND = {
     "slow" : 0,
     "medium": 1,
     "fast": 2, 
@@ -47,7 +58,6 @@ MAP_TRACES = {
 
 app = Flask(__name__)
 CORS(app)
-
 
 @app.route('/api/send_rule', methods=['POST'])
 def synthetize_rule():
@@ -80,9 +90,9 @@ def synthetize_rule():
             "high": DIFFICULT.get_probability()
         }
 
-        states = ["low", "medium", "high"]
+        states = ["low", "medium","high"]
     #TODO: create the list of actions out. 
-    rule = AtomicRule(actions=[MAP_ACTIONS[data["atomic_rule"]["action"]]], problem=problem)
+    rule = AtomicRule(actions=[MAP_ACTIONS_TO_BACKEND[data["atomic_rule"]["action"]]], problem=problem)
 
     for variable in data['atomic_rule']['variables']:
         variable_name = 'x' + variable
@@ -109,6 +119,7 @@ def synthetize_rule():
             constraint.append(el)
         rule.addConstraint(constraint)
     hard_constraints = []
+    
 
     for hard_constraint in data['atomic_rule']['hard_constraint']:
         el = eval(
@@ -121,10 +132,13 @@ def synthetize_rule():
     rule.addHardConstraint(hard_constraints)
     rule.solve()
 
-    constraints_synthetized = rule.result.get_constraint_synthetized()
+    constraints_synthetized = rule.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND)
     actions = rule.result.rule_obj.actions
-    anomalies = list(map(lambda x: x.to_dict(), rule.result.all_rules_unsatisfied))
-
+    actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x],actions))
+    anomalies = list(map(
+                        lambda x: x.to_dict(MAP_STATES_TO_FRONTEND), 
+                        rule.result.all_rules_unsatisfied
+                         ))
     return jsonify({
         "rule": constraints_synthetized,
         "anomalies": anomalies,

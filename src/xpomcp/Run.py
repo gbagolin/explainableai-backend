@@ -8,12 +8,22 @@ class Run:
         self.hellinger_distance = hellinger_distance
         self.is_anomaly = is_anomaly
 
-    def to_dict(self):
+    def to_dict(self,
+                MAP_STATES_TO_FRONTEND):
+        beliefs = []
+        for belief in self.beliefs: 
+            beliefs.append(
+                {
+                    "belief" : belief['belief'], 
+                    "state" : MAP_STATES_TO_FRONTEND[belief['state']]
+                }
+            )
+        
         return {
             "run": self.run,
             "step": self.step,
             "action": self.action,
-            "beliefs": self.beliefs,
+            "beliefs": beliefs,
             "hellinger_distance": self.hellinger_distance,
             "is_anomaly": self.is_anomaly
         }

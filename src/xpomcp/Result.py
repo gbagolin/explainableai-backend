@@ -22,7 +22,7 @@ class Result:
         self.rule_unsatisfied = []
         self.rule_unsatisfied_different_action = []
 
-    def get_constraint_synthetized(self):
+    def get_constraint_synthetized(self, MAP_STATES_TO_FRONTEND = None):
         '''
         :returns a list of constraints of the form:
         [[{state, operator, value}], [...]]
@@ -34,13 +34,34 @@ class Result:
             sub_rule = []
             for j, variable in enumerate(variables):
                 sub_rule.append({
-                    "state" : self.rule_obj.variable_state[variable].state_name,
+                    "state" : MAP_STATES_TO_FRONTEND[
+                        self.rule_obj.variable_state[variable].state_name
+                        ], 
                     "operator": self.rule_obj.variable_sign[variable],
                     "value": to_real(self.model[variable])
                 })
             constraints.append(sub_rule)
         return constraints
-
+    
+    def get_all_rule_unsat(self,
+                           MAP_ACTIONS_TO_FRONTEND, 
+                           MAP_STATES_TO_FRONTEND): 
+        anomalies = []
+        for anomaly in self.all_rules_unsatisfied: 
+            anomaly_to_frontend = {
+                "action" : MAP_ACTIONS_TO_FRONTEND[anomaly['action']],
+                "beliefs" : list(map(lambda e : {
+                    "belief" : e['belief'],
+                    "state" : MAP_STATES_TO_FRONTEND[e['state']]
+                }), anomaly['beliefs']), 
+                "hellinger_distance" : anomaly['hellinger_distance'], 
+                "is_anomaly": anomaly['is_anomaly'],
+                "run" : anomaly['run'],
+                "step": anomaly['step']
+            }
+            anomalies.append(anomaly_to_frontend)
+        return anomalies
+            
     def _print_rule(self):
         """
         pretty printing of rules, give a certain model

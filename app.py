@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request, jsonify
 from flask_cors import CORS
 
-
 from src.xpomcp.RuleTemplate import RuleTemplate
 from src.xpomcp.AtomicRule import AtomicRule
 from src.xpomcp.Velocity_Regulation_Problem import Velocity_Regulation_Problem
@@ -53,12 +52,13 @@ MAP_ACTIONS_TO_BACKEND = {
 }
 
 MAP_TRACES = {
+    "Velocity regulation ARMS" : "vr_ARMS.xes", 
     "Tiger correct": "tiger_correct.xes",
     "Tiger 40": "dataset_tiger_40.xes",
     "Tiger 60": "dataset_tiger_60.xes",
     "Tiger 80": "dataset_tiger_80.xes",
     "Velocity regulation 10": "obstacle_avoidance_10.xes",
-    "Velocity regulation 100": "obstacle_avoidance_100.xes",
+    "Velocity regulation 100": "obstacle_avoidance_100.xes", 
 }
 
 app = Flask(__name__)
@@ -141,7 +141,8 @@ def synthetize_rule():
     actions = rule.result.rule_obj.actions
     actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x],actions))
     anomalies = list(map(
-                        lambda x: x.to_dict(MAP_STATES_TO_FRONTEND), 
+                        lambda x: x.to_dict(MAP_STATES_TO_FRONTEND,
+                                            MAP_ACTIONS_TO_FRONTEND), 
                         rule.result.all_rules_unsatisfied
                          ))
     return jsonify({
@@ -154,12 +155,14 @@ def synthetize_rule():
 @app.route("/api/traces", methods=['GET'])
 def get_traces():
     return jsonify(
-        traces=['Tiger correct',
+        traces=[
+                'Tiger correct',
                 'Tiger 40',
                 'Tiger 60',
                 'Tiger 80',
                 'Velocity regulation 10',
                 'Velocity regulation 100',
+                "Velocity regulation ARMS"
                 ]
     )
 

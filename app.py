@@ -140,11 +140,10 @@ def synthetize_rule():
     constraints_synthetized = rule.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND)
     actions = rule.result.rule_obj.actions
     actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x],actions))
-    anomalies = list(map(
-                        lambda x: x.to_dict(MAP_STATES_TO_FRONTEND,
-                                            MAP_ACTIONS_TO_FRONTEND), 
-                        rule.result.all_rules_unsatisfied
-                         ))
+    anomalies = list(rule.result.get_all_rule_unsat(MAP_ACTIONS_TO_FRONTEND,
+                                                       MAP_STATES_TO_FRONTEND)
+                     )
+                               
     return jsonify({
         "rule": constraints_synthetized,
         "anomalies": anomalies,

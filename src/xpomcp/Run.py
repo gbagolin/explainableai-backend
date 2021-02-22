@@ -19,7 +19,6 @@ class Run:
                     "state" : MAP_STATES_TO_FRONTEND[belief['state']]
                 }
             )
-        
         return {
             "run": self.run,
             "step": self.step,

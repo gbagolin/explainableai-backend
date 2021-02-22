@@ -49,15 +49,31 @@ class Result:
         anomalies = []
         for anomaly in self.all_rules_unsatisfied: 
             anomaly_to_frontend = {
-                "action" : MAP_ACTIONS_TO_FRONTEND[anomaly['action']],
+                "action" : MAP_ACTIONS_TO_FRONTEND[anomaly.action],
                 "beliefs" : list(map(lambda e : {
-                    "belief" : e['belief'],
-                    "state" : MAP_STATES_TO_FRONTEND[e['state']]
-                }), anomaly['beliefs']), 
-                "hellinger_distance" : anomaly['hellinger_distance'], 
-                "is_anomaly": anomaly['is_anomaly'],
-                "run" : anomaly['run'],
-                "step": anomaly['step']
+                                        "belief" : e['belief'],
+                                        "state" : MAP_STATES_TO_FRONTEND[e['state']]
+                                    }, 
+                                    anomaly.beliefs
+                                    )
+                            ), 
+                "hellinger_distance" : anomaly.hellinger_distance, 
+                "is_anomaly": anomaly.is_anomaly,
+                "run" : anomaly.run,
+                "step": anomaly.step
+            }
+            anomalies.append(anomaly_to_frontend)
+        for anomaly in self.all_rule_unsatisfied_different_action: 
+            anomaly_to_frontend = {
+                "action" : MAP_ACTIONS_TO_FRONTEND[anomaly.action],
+                "beliefs" : list(map(lambda e : {
+                                    "belief" : e['belief'],
+                                    "state" : MAP_STATES_TO_FRONTEND[e['state']]
+                                }, 
+                                anomaly.beliefs)  
+                            ), 
+                "run" : anomaly.run,
+                "step": anomaly.step
             }
             anomalies.append(anomaly_to_frontend)
         return anomalies

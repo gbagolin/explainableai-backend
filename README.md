@@ -7,11 +7,11 @@ This repository contains only the backend part of the the web app.
 
 In the project directory, you can run:
 
-### `pip install -r requirements.txt`
+`pip install -r requirements.txt`
 
 ## Start the app 
 
 To start the app run: 
 
-### `python ./app.py`
+`python ./app.py`
 

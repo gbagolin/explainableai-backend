@@ -22,7 +22,8 @@ class Result:
         self.rule_unsatisfied = []
         self.rule_unsatisfied_different_action = []
 
-    def get_constraint_synthetized(self, MAP_STATES_TO_FRONTEND = None):
+    def get_constraint_synthetized(self, 
+                                   MAP_STATES_TO_FRONTEND = None):
         '''
         :returns a list of constraints of the form:
         [[{state, operator, value}], [...]]
@@ -43,9 +44,19 @@ class Result:
             constraints.append(sub_rule)
         return constraints
     
-    def get_all_rule_unsat(self,
+    def get_all_rule_unsat_same_action(self,
                            MAP_ACTIONS_TO_FRONTEND, 
                            MAP_STATES_TO_FRONTEND): 
+        '''
+        Returns a list of anomalies having the action equal to the one analized. 
+        Hellinger distance present. 
+        
+        Parameter MAP_ACTIONS_TO_FRONTEND: dict, used to map actions 
+        from backend to frontend for user readability 
+        
+        Parameter MAP_STATES_TO_FRONTEND: dict, used to map states 
+        from backend to frontend for user readability 
+        '''
         anomalies = []
         for anomaly in self.all_rules_unsatisfied: 
             anomaly_to_frontend = {
@@ -63,6 +74,23 @@ class Result:
                 "step": anomaly.step
             }
             anomalies.append(anomaly_to_frontend)
+        return anomalies
+    
+    def get_all_rule_unsat_different_action(self, 
+                                            MAP_ACTIONS_TO_FRONTEND, 
+                                            MAP_STATES_TO_FRONTEND):
+        '''
+        Returns a list of anomalies which follows the rule, but have a different action, 
+        than the one imposed. 
+        Hellinger distance not present. 
+        
+        Parameter MAP_ACTIONS_TO_FRONTEND: dict, used to map actions 
+        from backend to frontend for user readability 
+        
+        Parameter MAP_STATES_TO_FRONTEND: dict, used to map states 
+        from backend to frontend for user readability 
+        '''
+        anomalies = []
         for anomaly in self.all_rule_unsatisfied_different_action: 
             anomaly_to_frontend = {
                 "action" : MAP_ACTIONS_TO_FRONTEND[anomaly.action],
@@ -76,7 +104,7 @@ class Result:
                 "step": anomaly.step
             }
             anomalies.append(anomaly_to_frontend)
-        return anomalies
+        return anomalies 
             
     def _print_rule(self):
         """
@@ -106,7 +134,6 @@ class Result:
         """
         pretty printing of rules, give a certain model
         """
-
         rule = ""
         for rule_obj in self.rule_obj.rule_list:
             rule += 'rule: do action {} if: '.format(

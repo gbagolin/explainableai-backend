@@ -10,9 +10,6 @@ from src.xpomcp.State import State
 
 from src.xpomcp.main import *
 
-import sys
-import z3
-import pdb
 
 '''States for Tiger problem '''
 TIGER_LEFT = State("tiger left")
@@ -26,43 +23,44 @@ MAP BETWEEN ACTION AND STRING.
 '''
 
 MAP_STATES_TO_FRONTEND = {
-    0 : "low",
-    1 : "medium",
-    2 : "high",
-    "tiger left" : "tiger left",
-    "tiger right" : "tiger right"
+    0: "low",
+    1: "medium",
+    2: "high",
+    "tiger left": "tiger left",
+    "tiger right": "tiger right"
 }
 
 MAP_ACTIONS_TO_FRONTEND = {
-    0 : "slow",
-    1 : "medium",
-    2 : "fast",
+    0: "slow",
+    1: "medium",
+    2: "fast",
     "open left": "open left",
     "open right": "open right",
     "listen": "listen"
 }
 
 MAP_ACTIONS_TO_BACKEND = {
-    "slow" : 0,
+    "slow": 0,
     "medium": 1,
-    "fast": 2, 
+    "fast": 2,
     "open left": "open left",
     "open right": "open right",
     "listen": "listen",
 }
 
 MAP_TRACES = {
-    "Velocity regulation ARMS" : "vr_ARMS.xes", 
+    "Velocity regulation ARMS": "vr_ARMS.xes",
     "Tiger correct": "tiger_correct.xes",
     "Tiger 40": "dataset_tiger_40.xes",
     "Tiger 60": "dataset_tiger_60.xes",
     "Tiger 80": "dataset_tiger_80.xes",
     "Velocity regulation 10": "obstacle_avoidance_10.xes",
-    "Velocity regulation 100": "obstacle_avoidance_100.xes", 
+    "Velocity regulation 100": "obstacle_avoidance_100.xes",
 }
 
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route('/api/send_rule', methods=['POST'])
 def synthetize_rule():
@@ -87,17 +85,21 @@ def synthetize_rule():
     else:
         ''' Initialization of Velocity regulation problem '''
         problem = Velocity_Regulation_Problem(xes_log=f'./src/xpomcp/tracce/{MAP_TRACES[trace]}',
-                                              states=[EASY, INTERMEDIATE, DIFFICULT],
-                                            )
+                                              states=[
+                                                  EASY, INTERMEDIATE, DIFFICULT],
+                                              )
         map_belief_to_rule_sintax = {
             "low": EASY.get_probability(),
             "medium": INTERMEDIATE.get_probability(),
             "high": DIFFICULT.get_probability()
         }
 
-        states = ["low", "medium","high"]
-    #TODO: create the list of actions out. 
-    rule = AtomicRule(actions=[MAP_ACTIONS_TO_BACKEND[data["atomic_rule"]["action"]]], problem=problem)
+        states = ["low", "medium", "high"]
+    # TODO: create the list of actions out.
+    rule = AtomicRule(
+        actions=[MAP_ACTIONS_TO_BACKEND[data["atomic_rule"]["action"]]],
+        problem=problem
+    )
 
     for variable in data['atomic_rule']['variables']:
         variable_name = 'x' + variable
@@ -124,7 +126,6 @@ def synthetize_rule():
             constraint.append(el)
         rule.addConstraint(constraint)
     hard_constraints = []
-    
 
     for hard_constraint in data['atomic_rule']['hard_constraint']:
         el = eval(
@@ -137,32 +138,40 @@ def synthetize_rule():
     rule.addHardConstraint(hard_constraints)
     rule.solve()
 
-    constraints_synthetized = rule.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND)
+    constraints_synthetized = rule.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND
+                                                                     )
     actions = rule.result.rule_obj.actions
-    actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x],actions))
-    anomalies = list(rule.result.get_all_rule_unsat(MAP_ACTIONS_TO_FRONTEND,
-                                                       MAP_STATES_TO_FRONTEND)
-                     )
-                               
+    actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x], actions))
+    anomalies_same_action = list(
+        rule.result.get_all_rule_unsat_same_action(MAP_ACTIONS_TO_FRONTEND,
+                                                   MAP_STATES_TO_FRONTEND)
+    )
+    anomalies_different_action = list(
+        rule.result.get_all_rule_unsat_different_action(MAP_ACTIONS_TO_FRONTEND,
+                                                        MAP_STATES_TO_FRONTEND)
+    )
+
     return jsonify({
         "rule": constraints_synthetized,
-        "anomalies": anomalies,
+        "anomalies_same_action": anomalies_same_action,
+        "anomalies_different_action": anomalies_different_action,
         "states": states,
         "actions": actions
     })
+
 
 @app.route("/api/traces", methods=['GET'])
 def get_traces():
     return jsonify(
         traces=[
-                'Tiger correct',
-                'Tiger 40',
-                'Tiger 60',
-                'Tiger 80',
-                'Velocity regulation 10',
-                'Velocity regulation 100',
-                "Velocity regulation ARMS"
-                ]
+            'Tiger correct',
+            'Tiger 40',
+            'Tiger 60',
+            'Tiger 80',
+            'Velocity regulation 10',
+            'Velocity regulation 100',
+            "Velocity regulation ARMS"
+        ]
     )
 
 

@@ -8,8 +8,8 @@ velocity_regulation = {
         "fast"
     ],
     "states": [
-        "low",
-        "medium",
-        "high"
+        "easy",
+        "intermediate",
+        "difficult"
     ]
 }

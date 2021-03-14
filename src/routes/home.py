@@ -3,5 +3,5 @@ from fastapi import APIRouter
 router = APIRouter()
 
 @router.get('/')
-def dai():
-    return {"ciao"}
+def home():
+    return {"It works"}

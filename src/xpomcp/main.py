@@ -1,8 +1,8 @@
-from .RuleTemplate import RuleTemplate
-from .AtomicRule import AtomicRule
-from .Velocity_Regulation_Problem import Velocity_Regulation_Problem
-from .Tiger_Problem import Tiger_Problem
-from .State import State
+from RuleTemplate import RuleTemplate
+from AtomicRule import AtomicRule
+from Velocity_Regulation_Problem import Velocity_Regulation_Problem
+from Tiger_Problem import Tiger_Problem
+from State import State
 
 import sys
 import z3
@@ -52,3 +52,5 @@ def test():
     # rule.addHardConstraint(x1 >= 0.90)
     
     # rule.solve()
+
+test()

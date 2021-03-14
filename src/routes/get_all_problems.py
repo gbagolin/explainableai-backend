@@ -9,9 +9,7 @@ def get_all_problems():
 
     :return: a json array containing problems' name
     '''
-    return {
-        "problems": [
-            "tiger",
-            "velocity regulation"
-        ]
-    }
+    return [
+        "tiger",
+        "velocity regulation"
+    ]

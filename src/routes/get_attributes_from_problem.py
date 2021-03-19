@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-from src.problem_attributes.tiger import *
-from src.problem_attributes.velocity_regulation import *
+from src.problem_attributes import tiger
+from src.problem_attributes import velocity_regulation
 
 from src.schemas.Problem import Problem
 
@@ -16,6 +16,6 @@ def get_attributes_from_problem(problem: Problem):
     :return: a json object containing problems attributes
     '''
     if problem.name.lower() == "tiger":
-        return tiger
+        return tiger.tiger
     elif problem.name.lower() == "velocity regulation":
-        return velocity_regulation
+        return velocity_regulation.velocity_regulation

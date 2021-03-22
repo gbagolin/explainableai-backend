@@ -95,7 +95,6 @@ def synthetize_rule(request: List[Atomic_Rule]):
 
     rule_template = RuleTemplate(rule_list, problem, threshold=0.10)
     rule_template.solve()
-    # rule.solve()
     #
     constraints_synthetized = rule_template.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND
                                                                               )

@@ -2,6 +2,8 @@ from fastapi import APIRouter, Request
 from typing import Dict, Any, List
 from pydantic import BaseModel
 
+from ..types.Atomic_Rule import Atomic_Rule
+
 from ..utility.map import *
 from src.xpomcp.Tiger_Problem import *
 from src.xpomcp.Velocity_Regulation_Problem import *
@@ -10,20 +12,11 @@ from src.xpomcp.AtomicRule import AtomicRule
 router = APIRouter()
 
 
-class Atomic_Rule():
-    action: str
-    variables: List[int]
-
-
-class Rule_Template(BaseModel):
-    List[]
-
-
 @router.post('/api/send_rule')
-def synthetize_rule(request: Rule_Template):
+def synthetize_rule(request: List[Atomic_Rule]):
     # test()
     data = request
-    print(data)
+    print(data[0].action)
     return "OK"
     #
     # map_variable_string_to_object = dict()

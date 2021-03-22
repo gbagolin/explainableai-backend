@@ -1,0 +1,20 @@
+[
+  {
+    "constraints": [
+      [
+        {
+          "state": "easy",
+          "operator": ">",
+          "variable": "x1"
+        }
+      ]
+    ],
+    "hard_constraint": [],
+    "trace": "velocity regulation 100",
+    "problem": "velocity regulation",
+    "action": "medium",
+    "variables": [
+      1
+    ]
+  }
+]

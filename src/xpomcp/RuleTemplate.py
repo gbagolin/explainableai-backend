@@ -260,7 +260,7 @@ class RuleTemplate:
                 failed_step_counter += 1
 
             self.result.print_unsat_steps(rule.actions)
-            # self.result.print_unsat_steps_different_action()
+            self.result.print_unsat_steps_different_action()
             self.result.reset_rule_unsatisfied()
 
     def solve(self):

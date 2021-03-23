@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Request
-from typing import Dict, Any, List
-from pydantic import BaseModel
+from typing import List
 
 from ..types.Atomic_Rule import Atomic_Rule
 
@@ -98,17 +97,36 @@ def synthetize_rule(request: List[Atomic_Rule]):
     #
     constraints_synthetized = rule_template.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND
                                                                               )
-    actions = rule_template.result.rule_obj.actions
-    actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x], actions))
-    anomalies_same_action = list(
-        rule_template.result.get_all_rule_unsat_same_action(MAP_ACTIONS_TO_FRONTEND,
-                                                            MAP_STATES_TO_FRONTEND)
-    )
-    anomalies_different_action = list(
-        rule_template.result.get_all_rule_unsat_different_action(MAP_ACTIONS_TO_FRONTEND,
-                                                                 MAP_STATES_TO_FRONTEND)
-    )
-    #
+    all_actions = []
+    for rule in rule_template.rule_list:
+        all_actions.append(rule.actions)
+
+    all_actions = [action for actions in all_actions for action in actions]
+
+    actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x], all_actions))
+
+    anomalies_same_action = []
+    for rule in rule_template.rule_list:
+        anomalies = {
+            "actions": rule.actions,
+            "anomalies": list(
+                rule.result.get_all_rule_unsat_same_action(MAP_ACTIONS_TO_FRONTEND,
+                                                           MAP_STATES_TO_FRONTEND)
+            )
+        }
+        anomalies_same_action.append(anomalies)
+
+    anomalies_different_action = []
+    for rule in rule_template.rule_list:
+        anomalies = {
+            "actions": rule.actions,
+            "anomalies": list(
+                rule.result.get_all_rule_unsat_different_action(MAP_ACTIONS_TO_FRONTEND,
+                                                                MAP_STATES_TO_FRONTEND)
+            )
+        }
+        anomalies_different_action.append(anomalies)
+
     return ({
         "rule": constraints_synthetized,
         "anomalies_same_action": anomalies_same_action,

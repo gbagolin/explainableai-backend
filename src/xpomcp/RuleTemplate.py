@@ -206,6 +206,8 @@ class RuleTemplate:
                     rule_points.append(point)
                     generated_points += 1
 
+            rule.result = Result()
+
             # Hellinger distance of unsatisfiable steps
             failed_rules_diff_action = []
             Hellinger_min = []
@@ -235,7 +237,7 @@ class RuleTemplate:
                 run = Run(run=self.problem.run_folders[soft.run], step=soft.step,
                           action=self.problem.actions_in_runs[soft.run][soft.step], beliefs=state_beliefs,
                           hellinger_distance=hel, is_anomaly=is_anomaly)
-                self.result.add_run(run)
+                rule.result.add_run(run)
                 failed_step_counter += 1
 
             failed_steps_same_action = []
@@ -255,13 +257,13 @@ class RuleTemplate:
                 run = Run(run=self.problem.run_folders[soft.run], step=soft.step,
                           action=self.problem.actions_in_runs[soft.run][soft.step], beliefs=state_beliefs,
                           hellinger_distance=None, is_anomaly=False)
-                self.result.add_run_different_action(run)
+                rule.result.add_run_different_action(run)
 
                 failed_step_counter += 1
 
-            self.result.print_unsat_steps(rule.actions)
-            self.result.print_unsat_steps_different_action()
-            self.result.reset_rule_unsatisfied()
+            rule.result.print_unsat_steps(rule.actions)
+            rule.result.print_unsat_steps_different_action()
+            rule.result.reset_rule_unsatisfied()
 
     def solve(self):
         """

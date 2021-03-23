@@ -3,7 +3,7 @@ from .utilities.util import *
 
 class Result:
 
-    def __init__(self, model, rule_obj=None, type="action_rule"):
+    def __init__(self, model = None, rule_obj=None, type="action_rule"):
         self.rule_obj = rule_obj
         self.model = model
         self.rule_unsatisfied = []

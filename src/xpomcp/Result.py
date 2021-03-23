@@ -3,7 +3,7 @@ from .utilities.util import *
 
 class Result:
 
-    def __init__(self, model = None, rule_obj=None, type="action_rule"):
+    def __init__(self, model=None, rule_obj=None, type="action_rule"):
         self.rule_obj = rule_obj
         self.model = model
         self.rule_unsatisfied = []
@@ -33,7 +33,8 @@ class Result:
         rule = []
         for rule_obj in self.rule_obj.rule_list:
             constraint = {
-                "action": rule_obj.actions
+                "action": rule_obj.actions,
+                "constraints": []
             }
             for i, variables in enumerate(rule_obj.variable_constraint_set):
                 sub_rule = []
@@ -45,7 +46,7 @@ class Result:
                         "operator": self.rule_obj.variable_sign[variable],
                         "value": to_real(self.model[variable])
                     })
-                constraint['constraints'] = sub_rule
+                constraint['constraints'].append(sub_rule)
             rule.append(constraint)
         return rule
 

@@ -13,7 +13,7 @@ MAP BETWEEN ACTION AND STRING.
 
 MAP_STATES_TO_FRONTEND = {
     0: "easy",
-    1: "medium",
+    1: "intermediate",
     2: "difficult",
     "tiger left": "tiger left",
     "tiger right": "tiger right"

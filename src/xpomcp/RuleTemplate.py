@@ -1,9 +1,7 @@
 import z3
-import math
-import re
-import random
 import copy
-import pdb
+from numba import jit
+from time import process_time
 
 from .Problem import Problem
 from .DummyVar import DummyVar
@@ -106,7 +104,6 @@ class RuleTemplate:
         return best_model
 
     def synthetize_rule(self, model):
-
         """
         Synthetize a rule as close as possible to the trace.
         Print all the unstatisfiable steps and highlight anomalies.
@@ -271,7 +268,10 @@ class RuleTemplate:
         """
         self.solver.push()
         model = self.find_max_smt_in_rules()
+        t_start = process_time()
         self.synthetize_rule(model)
+        t_stop = process_time()
+        print(f"Elapsed time: {t_stop - t_start}")
         # self.print_rule_result(model)
         self.solver.pop()
         print()

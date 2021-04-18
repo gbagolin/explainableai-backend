@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from typing import List
 
-from ..types.Atomic_Rule import Atomic_Rule
+from ..types.Data import Data
 
 from ..utility.map import *
 from src.xpomcp.Tiger_Problem import *
@@ -9,11 +9,12 @@ from src.xpomcp.Velocity_Regulation_Problem import *
 from src.xpomcp.AtomicRule import AtomicRule
 from src.xpomcp.RuleTemplate import RuleTemplate
 
+
 router = APIRouter()
 
 
 @router.post('/api/send_rule')
-def synthetize_rule(request: List[Atomic_Rule]):
+def synthetize_rule(request: Data):
     data = request
 
     map_variable_string_to_object = dict()
@@ -21,8 +22,8 @@ def synthetize_rule(request: List[Atomic_Rule]):
 
     problem = None
     rule = None
-    trace = data[0].trace
-    if data[0].problem == "tiger":
+    trace = data.ruleTemplate[0].trace
+    if data.ruleTemplate[0].problem == "tiger":
         ''' Initialization of Tiger problem '''
         problem = Tiger_Problem(xes_log=f'src/xpomcp/tracce/{MAP_TRACES[trace]}',
                                 num_traces_to_analyze=100,
@@ -32,7 +33,7 @@ def synthetize_rule(request: List[Atomic_Rule]):
             "tiger right": TIGER_RIGHT.get_probability()
         }
         states = ["tiger left", "tiger right"]
-    elif data[0].problem == "velocity regulation":
+    elif data.ruleTemplate[0].problem == "velocity regulation":
         ''' Initialization of Velocity regulation problem '''
         problem = Velocity_Regulation_Problem(xes_log=f'src/xpomcp/tracce/{MAP_TRACES[trace]}',
                                               states=[
@@ -48,7 +49,7 @@ def synthetize_rule(request: List[Atomic_Rule]):
 
     # TODO: create the list of actions out.
     rule_list = []
-    for atomic_rule in data:
+    for atomic_rule in data.ruleTemplate:
         print(atomic_rule)
         rule = AtomicRule(
             actions=[MAP_ACTIONS_TO_BACKEND[atomic_rule.action]],
@@ -93,6 +94,16 @@ def synthetize_rule(request: List[Atomic_Rule]):
         rule_list.append(rule)
 
     rule_template = RuleTemplate(rule_list, problem, threshold=0.10)
+
+    hard_constraints = []
+    for hard_constraint in data.hardConstraint:
+        el = eval(
+            hard_constraint.variable +
+            hard_constraint.operator +
+            str(hard_constraint.term),
+            {}, dict(**map_variable_string_to_object))
+        hard_constraints.append(el)
+    rule_template.add_constraint(hard_constraints)
     rule_template.solve()
     #
     constraints_synthetized = rule_template.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND

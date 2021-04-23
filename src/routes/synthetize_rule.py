@@ -49,12 +49,15 @@ def synthetize_rule(request: Data):
 
     # TODO: create the list of actions out.
     rule_list = []
+    actions = []
     for atomic_rule in data.ruleTemplate:
         print(atomic_rule)
         rule = AtomicRule(
-            actions=[MAP_ACTIONS_TO_BACKEND[atomic_rule.action]],
+            actions=[MAP_ACTIONS_TO_BACKEND[atomic_rule.action.name]],
             problem=problem
         )
+        actions.append({"id": atomic_rule.action.id,
+                        "name": atomic_rule.action.name})
 
         for variable in atomic_rule.variables:
             variable_name = variable
@@ -106,20 +109,27 @@ def synthetize_rule(request: Data):
     rule_template.add_constraint(hard_constraints)
     rule_template.solve()
     #
-    constraints_synthetized = rule_template.result.get_constraint_synthetized(MAP_STATES_TO_FRONTEND
-                                                                              )
+    constraints_synthetized = rule_template.result.get_constraint_synthetized(
+        MAP_STATES_TO_FRONTEND)
+    print("Constr: ", constraints_synthetized)
+    for ruleIndex in range(len(constraints_synthetized)):
+        constraints_synthetized[ruleIndex]['action'] = actions[ruleIndex]
+
     all_actions = []
     for rule in rule_template.rule_list:
         all_actions.append(rule.actions)
 
     all_actions = [action for actions in all_actions for action in actions]
 
-    actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x], all_actions))
-
+    # actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x], all_actions))
+    print("Actions: ", actions)
     anomalies_same_action = []
-    for rule in rule_template.rule_list:
+    for indexRule in range(len(rule_template.rule_list)):
+        rule = rule_template.rule_list[indexRule]
+        print(rule.result.get_all_rule_unsat_same_action(MAP_ACTIONS_TO_FRONTEND,
+                                                           MAP_STATES_TO_FRONTEND))
         anomalies = {
-            "actions": rule.actions,
+            "actions": actions[indexRule],
             "anomalies": list(
                 rule.result.get_all_rule_unsat_same_action(MAP_ACTIONS_TO_FRONTEND,
                                                            MAP_STATES_TO_FRONTEND)
@@ -128,9 +138,9 @@ def synthetize_rule(request: Data):
         anomalies_same_action.append(anomalies)
 
     anomalies_different_action = []
-    for rule in rule_template.rule_list:
+    for indexRule in range(len(rule_template.rule_list)):
         anomalies = {
-            "actions": rule.actions,
+            "actions": actions[indexRule],
             "anomalies": list(
                 rule.result.get_all_rule_unsat_different_action(MAP_ACTIONS_TO_FRONTEND,
                                                                 MAP_STATES_TO_FRONTEND)

@@ -14,8 +14,13 @@ class Hard_Constraint(BaseModel):
     term: str
 
 
+class Action(BaseModel):
+    id: int
+    name: str
+
+
 class Atomic_Rule(BaseModel):
-    action: str
+    action: Action
     variables: List[str]
     constraints: List[List[Constraint]]
     hard_constraint: List[int] = []

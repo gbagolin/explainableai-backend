@@ -1,3 +1,4 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "python.pythonPath": "/home/giovanni/miniconda3/envs/fastapi/bin/python"
 }

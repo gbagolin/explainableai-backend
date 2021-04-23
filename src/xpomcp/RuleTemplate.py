@@ -132,7 +132,7 @@ class RuleTemplate:
 
         total_cost = z3.Sum(cost)
         self.solver.add(interval_cost == total_cost)
-        self.solver.maximize(interval_cost)
+        self.solver.minimize(interval_cost)
 
         # check if SAT or UNSAT
         print('Check Formulas')

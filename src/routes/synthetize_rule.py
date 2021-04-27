@@ -51,7 +51,6 @@ def synthetize_rule(request: Data):
     rule_list = []
     actions = []
     for atomic_rule in data.ruleTemplate:
-        print(atomic_rule)
         rule = AtomicRule(
             actions=[MAP_ACTIONS_TO_BACKEND[atomic_rule.action.name]],
             problem=problem
@@ -111,7 +110,6 @@ def synthetize_rule(request: Data):
     #
     constraints_synthetized = rule_template.result.get_constraint_synthetized(
         MAP_STATES_TO_FRONTEND)
-    print("Constr: ", constraints_synthetized)
     for ruleIndex in range(len(constraints_synthetized)):
         constraints_synthetized[ruleIndex]['action'] = actions[ruleIndex]
 
@@ -122,12 +120,9 @@ def synthetize_rule(request: Data):
     all_actions = [action for actions in all_actions for action in actions]
 
     # actions = list(map(lambda x: MAP_ACTIONS_TO_FRONTEND[x], all_actions))
-    print("Actions: ", actions)
     anomalies_same_action = []
     for indexRule in range(len(rule_template.rule_list)):
         rule = rule_template.rule_list[indexRule]
-        print(rule.result.get_all_rule_unsat_same_action(MAP_ACTIONS_TO_FRONTEND,
-                                                           MAP_STATES_TO_FRONTEND))
         anomalies = {
             "actions": actions[indexRule],
             "anomalies": list(

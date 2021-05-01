@@ -134,6 +134,7 @@ def synthetize_rule(request: Data):
 
     anomalies_different_action = []
     for indexRule in range(len(rule_template.rule_list)):
+        rule = rule_template.rule_list[indexRule]
         anomalies = {
             "actions": actions[indexRule],
             "anomalies": list(

@@ -66,7 +66,8 @@ class RuleTemplate:
                         subrule = []
                         for i, constraint in enumerate(constraints_in_and):
                             constraint.belief = belief[self.problem.states[constraint.state].state_name]
-                            subrule.append(eval(constraint.__str__(), {}, self.variables))
+                            subrule.append(
+                                eval(constraint.__str__(), {}, self.variables))
 
                         subrules.append(z3.And(subrule))
                     formula = z3.Or(subrules)
@@ -84,7 +85,8 @@ class RuleTemplate:
 
         # uso una ricerca binaria per risolvere l'or gigante definito sopra!
         while low_threshold <= high_threshold:
-            self.solver.push()  # risolutore incrementale, consente di evitare di rifare calcoli creando un ambiente virtuale
+            # risolutore incrementale, consente di evitare di rifare calcoli creando un ambiente virtuale
+            self.solver.push()
             threshold = (low_threshold + high_threshold) // 2
             # Pble pseudo boolean less equal
             self.solver.add(z3.PbLe([(soft.literal, 1) for soft in self.soft_constr],
@@ -98,7 +100,8 @@ class RuleTemplate:
                 low_threshold = threshold + 1
             self.solver.pop()
 
-        print('fail to satisfy {} steps out of {}'.format(final_threshold, total_soft_constr))
+        print('fail to satisfy {} steps out of {}'.format(
+            final_threshold, total_soft_constr))
         # return a model that satisfy all the hard clauses and the maximum number of soft clauses
         # print(best_model)
         return best_model
@@ -153,7 +156,8 @@ class RuleTemplate:
             return
 
         # print results
-        self.result = Result(rule_obj=copy.copy(self), model=m, type="final_rule")
+        self.result = Result(rule_obj=copy.copy(
+            self), model=m, type="final_rule")
         print(self.result)
 
         for rule in self.rule_list:

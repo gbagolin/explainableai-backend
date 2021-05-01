@@ -38,7 +38,7 @@ def synthetize_rule(request: Data):
         problem = Velocity_Regulation_Problem(xes_log=f'src/xpomcp/tracce/{MAP_TRACES[trace]}',
                                               states=[
                                                   EASY, INTERMEDIATE, DIFFICULT],
-                                              num_traces_to_analyze=100)
+                                              num_traces_to_analyze=None)
         map_belief_to_rule_sintax = {
             "easy": EASY.get_probability(),
             "intermediate": INTERMEDIATE.get_probability(),

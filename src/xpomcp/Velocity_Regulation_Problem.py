@@ -70,7 +70,7 @@ class Velocity_Regulation_Problem(Problem):
 
     def parse_run(self, event):
         # attributes
-        segment = self.consider_only_one_segment(event, 6)
+        segment = self.get_current_segment(event)
 
         if segment == False:
             # in case the function above returns False, we don't need to parse this run

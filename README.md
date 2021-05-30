@@ -13,5 +13,5 @@ In the project directory, you can run:
 
 To start the app run: 
 
-`python ./app.py`
+`bash run.sh`
 

@@ -187,7 +187,9 @@ class AtomicRule:
         rule_points = []
         generated_points = 0
         # crei dei punti perchè potrei non aver visto tutti i casi strani dalle traccie.
-        while generated_points < 1000:
+        attempts = 0
+        while generated_points < 1000 and attempts < 10000:
+            attempts += 1
             point = self.problem.generate_points()
 
             satisfy_a_constraint = False
@@ -239,7 +241,11 @@ class AtomicRule:
             failed_rules_diff_action.append(num)
             P = [self.problem.belief_in_runs[soft.run][soft.step][state] for state in
                  map(lambda state: state.state_name, self.problem.states)]
+
             hel_dst = [Hellinger_distance(P, Q) for Q in rule_points]
+            if len(hel_dst) == 0:
+                hel_dst = [1.0]
+
             Hellinger_min.append(min(hel_dst))
         # print unsatisfiable steps in decreasing order of hellinger distancEe
         for soft, hel in [[self.soft_constr[x], h] for h, x in zip(Hellinger_min, failed_rules_diff_action)]:

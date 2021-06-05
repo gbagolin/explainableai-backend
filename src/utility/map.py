@@ -44,6 +44,7 @@ MAP_TRACES = {
     "tiger 60": "dataset_tiger_60.xes",
     "tiger 80": "dataset_tiger_80.xes",
     "velocity regulation 10": "obstacle_avoidance_10.xes",
+    "velocity regulation 10 with graph": "obstacle_avoidance_10_graph.xes",
     "velocity regulation 100": "obstacle_avoidance_100.xes",
     "vr 50 no shields" : "vr_50_no_shield.xes", 
     "vr 70 no shields" : "vr_70_no_shield.xes",

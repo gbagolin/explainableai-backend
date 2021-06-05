@@ -26,6 +26,7 @@ def get_traces_from_problem(problem: Problem):
             "vr 70 no shields",
             "vr 90 no shields",
             "vr 103 no shields",
+            "velocity regulation 10 with graph"
         ]
     else:
         return {

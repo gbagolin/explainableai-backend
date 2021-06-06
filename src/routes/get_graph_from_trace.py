@@ -49,7 +49,7 @@ def parse_xes(xes):
 
     return graph
 
-@router.get('/api/get_graph_from_trace')
+@router.post('/api/get_graph_from_trace')
 def get_graph_from_trace(trace: Trace):
 
     trace_file_name = MAP_TRACES[trace.name]

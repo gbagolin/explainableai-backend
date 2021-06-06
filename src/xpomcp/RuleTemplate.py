@@ -53,13 +53,16 @@ class RuleTemplate:
     def find_max_smt_in_rules(self):
         print("Solving MAX-SMT problem")
         formula = None
+        print(f"Num of steps: {len(self.problem.belief_in_runs[1])}"
+              )
 
         for rule_num, rule in enumerate(self.rule_list):
             for run in range(len(self.problem.belief_in_runs)):
                 for bel, belief in enumerate(self.problem.belief_in_runs[run]):
                     # generate boolean var for soft constraints
                     soft = z3.Bool('b_{}_{}_{}'.format(run, bel, rule_num))
-                    self.soft_constr.append(DummyVar(soft, run, bel, rule_num))
+                    self.soft_constr.append(
+                        DummyVar(soft, run, bel, rule_num))
                     subrules = []
 
                     for constraints_in_and in rule.constraints:

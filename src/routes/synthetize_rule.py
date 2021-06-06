@@ -144,10 +144,31 @@ def synthetize_rule(request: Data):
         }
         anomalies_different_action.append(anomalies)
 
+    steps_counter_anomalies_same_action = dict()
+    steps_counter_anomalies_different_action = dict()
+
+    # print(anomalies_same_action)
+
+    for anomaliesObject in anomalies_same_action:
+        for anomaly in anomaliesObject['anomalies']:
+            if anomaly['step'] in steps_counter_anomalies_same_action.keys():
+                steps_counter_anomalies_same_action[anomaly['step']] += 1
+            else:
+                steps_counter_anomalies_same_action[anomaly['step']] = 1
+
+    for anomaliesObject in anomalies_different_action:
+        for anomaly in anomaliesObject['anomalies']:
+            if anomaly['step'] in steps_counter_anomalies_different_action.keys():
+                steps_counter_anomalies_different_action[anomaly['step']] += 1
+            else:
+                steps_counter_anomalies_different_action[anomaly['step']] = 1
+
     return ({
         "rule": constraints_synthetized,
         "anomalies_same_action": anomalies_same_action,
         "anomalies_different_action": anomalies_different_action,
         "states": states,
-        "actions": actions
+        "actions": actions,
+        "steps_counter_anomalies_same_action": steps_counter_anomalies_same_action,
+        "steps_counter_anomalies_different_action": steps_counter_anomalies_different_action,
     })

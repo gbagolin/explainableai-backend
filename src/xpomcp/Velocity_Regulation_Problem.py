@@ -15,6 +15,7 @@ class Velocity_Regulation_Problem(Problem):
     def __init__(self, xes_log=None, states=[0, 1, 2], actions=[0, 1, 2], beliefs=None, num_traces_to_analyze=None):
         super().__init__(xes_log, states, actions)
         self.segments_in_runs = []
+        self.sub_segments_in_runs = []
         self.parse_xes(
             xes=xes_log, num_traces_to_analyze=num_traces_to_analyze)
 
@@ -68,15 +69,22 @@ class Velocity_Regulation_Problem(Problem):
 
         return False
 
+    def get_current_sub_seg(self, event):
+        return int(node_from_key(event, 'subsegment').attrib['value'])
+
     def parse_run(self, event):
         # attributes
         segment = self.get_current_segment(event)
+        sub_segment = self.get_current_sub_seg(event)
+
+        segment_and_subsegment_to_add = str(segment) + str(sub_segment)
 
         if segment == False:
             # in case the function above returns False, we don't need to parse this run
             return
 
         self.segments_in_runs[-1].append(segment)
+        self.sub_segments_in_runs[-1].append(segment_and_subsegment_to_add)
         action = self.get_current_action(event)
         self.actions_in_runs[-1].append(action)
 
@@ -100,6 +108,8 @@ class Velocity_Regulation_Problem(Problem):
         for state in range(len(self.states)):
             self.belief_in_runs[-1][-1][state] /= total
 
+        # REFERENCE HERE THE SUBSEGMENT.
+
     def parse_xes(self, xes, num_traces_to_analyze):
         """
         Parse xes log and build data from traces
@@ -115,7 +125,11 @@ class Velocity_Regulation_Problem(Problem):
                 int(node_from_key(trace, 'run').attrib['value'])))
             # each xes trace is a POMCP's run
             self.segments_in_runs.append([])
+            self.sub_segments_in_runs.append([])
             self.actions_in_runs.append([])
             self.belief_in_runs.append([])
+            
+            print(len(trace.findall('xes:event', XES_NES)))
+
             for event in trace.findall('xes:event', XES_NES):
                 self.parse_run(event)

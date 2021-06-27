@@ -9,7 +9,6 @@ from src.xpomcp.Velocity_Regulation_Problem import *
 from src.xpomcp.AtomicRule import AtomicRule
 from src.xpomcp.RuleTemplate import RuleTemplate
 
-
 router = APIRouter()
 
 

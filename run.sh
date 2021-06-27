@@ -1,1 +1,1 @@
-uvicorn app:app --port 8001 --reload
+uvicorn app:app --port 8001 --workers 3

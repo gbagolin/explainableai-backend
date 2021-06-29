@@ -21,7 +21,6 @@
 
     .anomalies td, .anomalies th {
       border: 1px solid #ddd;
-<!--      padding: 8px;-->
     }
 
     .anomalies tr:nth-child(even){background-color: #f2f2f2;}
@@ -29,8 +28,6 @@
     .anomalies tr:hover {background-color: #ddd;}
 
     .anomalies th {
-<!--      padding-top: 12px;-->
-<!--      padding-bottom: 12px;-->
       text-align: left;
       background-color: rgba(251, 191, 36, 1);
       color: white;
@@ -44,6 +41,10 @@
         font-size: 0.7rem;
     }
 
+    .plot{
+        width: 300px;
+        height: 300px;
+    }
 
 
 </style>
@@ -74,7 +75,7 @@
                 {{bel['state']}}: {{bel['belief']|round(2)}}<br>
                 {% endfor %}
             </td>
-            <td>{{anom['severity']}}</td>
+            <td>{{anom['hellinger_distance'] | round(2)}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -104,6 +105,9 @@
         {% endfor %}
     </table>
     <p class="text-center font-sm">Table 2. </p>
+
+    <img src="data:image/jpeg;base64,{{ img_data }}"
+    class=""/>
 </article>
 </body>
 </html>

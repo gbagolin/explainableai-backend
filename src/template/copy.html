@@ -1,0 +1,56 @@
+<!--    <p>In table 1, all the anomalies whose action choosen by the agent is equal to the one analyzed in the rule are-->
+<!--        shown.</p>-->
+<!--    <table class="anomalies">-->
+<!--        <tr>-->
+<!--            <th>#</th>-->
+<!--            <th>Run</th>-->
+<!--            <th>Step</th>-->
+<!--            <th>Action</th>-->
+<!--            <th>Beliefs</th>-->
+<!--            <th>Severity</th>-->
+<!--        </tr>-->
+<!--        &lt;!&ndash;        {% set outer_loop = loop %}&ndash;&gt;-->
+<!--        {%for anomaly in context.anomalies_same_action%}-->
+<!--        <tr>-->
+<!--            <td>{{loop.index}}</td>-->
+<!--            <td>{{anomaly.run}}</td>-->
+<!--            <td>{{anomaly.step}}</td>-->
+<!--            <td>{{anomaly.action}}</td>-->
+<!--            <td>-->
+<!--                {%for bel in anomaly.beliefs%}-->
+<!--                {{bel.state}}: {{bel.belief}}<br>-->
+<!--                {% endfor %}-->
+<!--            </td>-->
+<!--            <td>{{anomaly.hellinger_distance}}</td>-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+<!--    </table>-->
+<!--    <p class="text-center font-sm">Table 1. </p>-->
+<!--    <p>In table 2, all the anomalies whose action choosen by the agent is different to the one analyzed in the rule are-->
+<!--        shown.</p>-->
+<!--    <table class="anomalies">-->
+<!--        <tr>-->
+<!--            <th>#</th>-->
+<!--            <th>Run</th>-->
+<!--            <th>Step</th>-->
+<!--            <th>Action</th>-->
+<!--            <th>Beliefs</th>-->
+<!--        </tr>-->
+<!--        &lt;!&ndash;        {%for anom in anomalies_da%}&ndash;&gt;-->
+<!--        &lt;!&ndash;        <tr>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <td>{{loop.index}}</td>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <td>{{anom['run']}}</td>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <td>{{anom['step']}}</td>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <td>{{anom['action']}}</td>&ndash;&gt;-->
+<!--        &lt;!&ndash;            <td>&ndash;&gt;-->
+<!--        &lt;!&ndash;                {%for bel in anom['beliefs']%}&ndash;&gt;-->
+<!--        &lt;!&ndash;                {{bel['state']}}: {{bel['belief']}}<br>&ndash;&gt;-->
+<!--        &lt;!&ndash;                {% endfor %}&ndash;&gt;-->
+<!--        &lt;!&ndash;            </td>&ndash;&gt;-->
+<!--        &lt;!&ndash;        </tr>&ndash;&gt;-->
+<!--        &lt;!&ndash;        {% endfor %}&ndash;&gt;-->
+<!--    </table>-->
+<!--    <p class="text-center font-sm">Table 2. </p>-->
+<!--    &lt;!&ndash;    <img src="data:image/jpeg;base64,{{ img_data }}"&ndash;&gt;-->
+<!--    &lt;!&ndash;         class=""/>&ndash;&gt;-->
+<!--    {% endfor %}-->

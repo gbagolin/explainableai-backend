@@ -2,11 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <!--    <link href="{{ url_for('static', path='/report.css') }}" rel="stylesheet">-->
     <title>Report</title>
     <meta name="description" content="Report example">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <style>
+    html{
+        font-family: 'Quicksand', sans-serif;
+    }
     .text-center{
         text-align:center;
     }
@@ -41,9 +46,13 @@
         font-size: 0.7rem;
     }
 
+    .font-lg{
+        font-size: 1.5rem;
+    }
+
     .plot{
-        width: 300px;
-        height: 300px;
+        width: 60%;
+        height: 60%;
     }
 
 
@@ -51,8 +60,29 @@
 <body>
 <article>
     <h1 class="text-center text-yellow">Explainable POMCP report generated at:</h1>
-    <h1 class="text-center text-yellow">{{now}}</h1>
+    <h1 class="text-center text-yellow">{{context.now}}</h1>
     <div class="m-5"></div>
+    {% for action in context.actions %}
+    <h4 class="font-lg">Rule: {{loop.index}}</h4>
+    <p class="font-lg">Rule action: {{action.name}}</p>
+    <p class="font-lg">Rule template:</p>
+    <ol>
+        {% for sub_rule in context.rule_string[loop.index - 1] %}
+        <li>{{sub_rule[1]}}</li>
+        {% endfor %}
+    </ol>
+    <p class="font-lg">Rule synthetized:</p>
+    <ol>
+        {% for sub_rule in context.rules_synthetized[loop.index - 1] %}
+        <li>{{sub_rule}}</li>
+        {% endfor %}
+    </ol>
+    <p>Figure 1 represents the distribution of Hellinger Distance among anomalies</p>
+    <img src="data:image/jpeg;base64,{{ context.distribution_plot[loop.index - 1] }}"
+         class="plot"/>
+    <p>Figure 2 represents the anomaly scatter plot, where each anomaly and in which area it falls into is
+        presented. </p>
+
     <p>In table 1, all the anomalies whose action choosen by the agent is equal to the one analyzed in the rule are
         shown.</p>
     <table class="anomalies">
@@ -64,18 +94,18 @@
             <th>Beliefs</th>
             <th>Severity</th>
         </tr>
-        {%for anom in anomalies_sa%}
+        {%for anomaly in context.anomalies_same_action[loop.index - 1].anomalies %}
         <tr>
             <td>{{loop.index}}</td>
-            <td>{{anom['run']}}</td>
-            <td>{{anom['step']}}</td>
-            <td>{{anom['action']}}</td>
+            <td>{{anomaly['run']}}</td>
+            <td>{{anomaly['step']}}</td>
+            <td>{{anomaly['action']}}</td>
             <td>
-                {%for bel in anom['beliefs']%}
-                {{bel['state']}}: {{bel['belief']|round(2)}}<br>
+                {%for bel in anomaly['beliefs']%}
+                {{bel['state']}}: {{bel['belief']| round(2)}}<br>
                 {% endfor %}
             </td>
-            <td>{{anom['hellinger_distance'] | round(2)}}</td>
+            <td>{{anomaly['hellinger_distance'] | round(2)}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -90,15 +120,15 @@
             <th>Action</th>
             <th>Beliefs</th>
         </tr>
-        {%for anom in anomalies_da%}
+        {%for anomaly in context.anomalies_different_action[loop.index - 1].anomalies %}
         <tr>
             <td>{{loop.index}}</td>
-            <td>{{anom['run']}}</td>
-            <td>{{anom['step']}}</td>
-            <td>{{anom['action']}}</td>
+            <td>{{anomaly['run']}}</td>
+            <td>{{anomaly['step']}}</td>
+            <td>{{anomaly['action']}}</td>
             <td>
-                {%for bel in anom['beliefs']%}
-                {{bel['state']}}: {{bel['belief']|round(2)}}<br>
+                {%for bel in anomaly['beliefs']%}
+                {{bel['state']}}: {{bel['belief']| round(2)}}<br>
                 {% endfor %}
             </td>
         </tr>
@@ -106,8 +136,7 @@
     </table>
     <p class="text-center font-sm">Table 2. </p>
 
-    <img src="data:image/jpeg;base64,{{ img_data }}"
-    class=""/>
+    {% endfor %}
 </article>
 </body>
 </html>

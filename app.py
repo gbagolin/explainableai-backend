@@ -5,6 +5,7 @@ from src.routes import synthetize_rule
 from src.routes import get_traces_from_problem
 from src.routes import home
 from src.routes import send_file
+from src.routes import process_base64_image
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -38,3 +39,4 @@ app.include_router(get_all_problems.router)
 app.include_router(get_attributes_from_problem.router)
 app.include_router(get_graph_from_trace.router)
 app.include_router(send_file.router)
+app.include_router(process_base64_image.router)

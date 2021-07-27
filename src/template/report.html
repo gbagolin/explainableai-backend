@@ -77,12 +77,13 @@
         <li>{{sub_rule}}</li>
         {% endfor %}
     </ol>
+    {% if context.anomalies_same_action[loop.index - 1].anomalies | length > 0 %}
     <p>Figure 1 represents the distribution of Hellinger Distance among anomalies</p>
     <img src="data:image/jpeg;base64,{{ context.distribution_plot[loop.index - 1] }}"
          class="plot"/>
-    <p>Figure 2 represents the anomaly scatter plot, where each anomaly and in which area it falls into is
-        presented. </p>
+    {% endif %}
 
+    {% if context.anomalies_same_action[loop.index - 1].anomalies | length > 0 %}
     <p>In table 1, all the anomalies whose action choosen by the agent is equal to the one analyzed in the rule are
         shown.</p>
     <table class="anomalies">
@@ -110,6 +111,8 @@
         {% endfor %}
     </table>
     <p class="text-center font-sm">Table 1. </p>
+    {% endif %}
+    {% if context.anomalies_different_action[loop.index - 1].anomalies | length > 0 %}
     <p>In table 2, all the anomalies whose action choosen by the agent is different to the one analyzed in the rule are
         shown.</p>
     <table class="anomalies">
@@ -135,7 +138,7 @@
         {% endfor %}
     </table>
     <p class="text-center font-sm">Table 2. </p>
-
+    {% endif %}
     {% endfor %}
 </article>
 </body>

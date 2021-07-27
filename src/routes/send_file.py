@@ -89,9 +89,9 @@ def preprocess_rule_synthetized(rules: List) -> List[str]:
 
 @router.post('/api/send_file')
 async def main(request: Request, report: Report):
-    headers = {"Content-Disposition": "attachment;",
-               "filename": "report.pdf;"}
-    # headers = {}
+    # headers = {"Content-Disposition": "attachment;",
+    #            "filename": "report.pdf;"}
+    headers = {}
     # print(report)
     now = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     rules_synthetized = preprocess_rule_synthetized(report.rule.rule)

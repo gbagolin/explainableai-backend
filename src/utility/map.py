@@ -39,6 +39,7 @@ MAP_ACTIONS_TO_BACKEND = {
 
 MAP_TRACES = {
     "velocity regulation arms": "vr_ARMS.xes",
+    "velocity regulation airo": "airo_log.xes", 
     "tiger correct": "tiger_correct.xes",
     "tiger 40": "dataset_tiger_40.xes",
     "tiger 60": "dataset_tiger_60.xes",
@@ -50,4 +51,5 @@ MAP_TRACES = {
     "vr 70 no shields" : "vr_70_no_shield.xes",
     "vr 90 no shields" : "vr_90_no_shield.xes",
     "vr 103 no shields" : "vr_103_no_shield.xes",
+
 }

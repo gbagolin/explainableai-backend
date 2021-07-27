@@ -22,6 +22,7 @@ def get_traces_from_problem(problem: Problem):
             "velocity regulation 10",
             "velocity regulation 100",
             "velocity regulation arms",
+            "velocity regulation airo",
             "vr 50 no shields",
             "vr 70 no shields",
             "vr 90 no shields",

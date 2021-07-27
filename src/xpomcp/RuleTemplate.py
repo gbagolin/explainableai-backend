@@ -60,9 +60,9 @@ class RuleTemplate:
             for run in range(len(self.problem.belief_in_runs)):
                 for bel, belief in enumerate(self.problem.belief_in_runs[run]):
                     # generate boolean var for soft constraints
-                    soft = z3.Bool('b_{}_{}_{}'.format(run, bel, rule_num))
+                    soft = z3.Bool('b_{}_{}_{}'.format(rule_num, run, bel))
                     self.soft_constr.append(
-                        DummyVar(soft, run, bel, rule_num))
+                        DummyVar(soft, rule_num, run, bel))
                     subrules = []
 
                     for constraints_in_and in rule.constraints:
@@ -242,7 +242,7 @@ class RuleTemplate:
                         "belief": self.problem.belief_in_runs[soft.run][soft.step][state]
                     }))
 
-                run = Run(run=self.problem.run_folders[soft.run], step=soft.step,
+                run = Run(run=self.problem.run_folders[soft.run], step=soft.step + 1,
                           action=self.problem.actions_in_runs[soft.run][soft.step], beliefs=state_beliefs,
                           hellinger_distance=hel, is_anomaly=is_anomaly)
                 rule.result.add_run(run)
@@ -262,7 +262,7 @@ class RuleTemplate:
                         "belief": self.problem.belief_in_runs[soft.run][soft.step][state]
                     }))
 
-                run = Run(run=self.problem.run_folders[soft.run], step=soft.step,
+                run = Run(run=self.problem.run_folders[soft.run], step=soft.step + 1,
                           action=self.problem.actions_in_runs[soft.run][soft.step], beliefs=state_beliefs,
                           hellinger_distance=None, is_anomaly=False)
                 rule.result.add_run_different_action(run)

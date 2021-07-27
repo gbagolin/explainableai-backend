@@ -1,9 +1,10 @@
-#from pm4py.objects.log.importer.xes import importer as xes_importer
+# from pm4py.objects.log.importer.xes import importer as xes_importer
 import xml.etree.ElementTree as ET
 
 import random
 from .utilities.util import *
 from .Problem import *
+
 
 #######
 # XES #
@@ -30,7 +31,7 @@ class Velocity_Regulation_Problem(Problem):
         Return next segment in the parsing function 
         '''
         segment = int(node_from_key(event, 'segment').attrib['value'])
-        if(segment == 8):
+        if (segment == 8):
             return segment
         else:
             return segment + 1
@@ -54,9 +55,20 @@ class Velocity_Regulation_Problem(Problem):
         '''
         segment = self.get_current_segment(event)
         if segment == segment_to_avoid:
-            return False
+            return -1
 
         return segment
+
+    def avoid_one_sub_segment(self, event, sub_segment_to_avoid):
+        '''
+        Return False if the the segment in the run needs to be avoided.
+        Return the segment otherwise.
+        '''
+        sub_seg = self.get_current_sub_seg(event)
+        if sub_segment_to_avoid == sub_seg:
+            return -1
+
+        return sub_seg
 
     def consider_only_one_segment(self, event, segment_to_consider):
         '''
@@ -67,7 +79,18 @@ class Velocity_Regulation_Problem(Problem):
         if segment == segment_to_consider:
             return segment
 
-        return False
+        return -1
+
+    def consider_only_one_sub_segment(self, event, sub_seg_to_consider):
+        '''
+        Return False if the current segment is not the one that needs to be considered.
+        Return the current segment otherwise.
+        '''
+        sub_seg = self.get_current_sub_seg(event)
+        if sub_seg == sub_seg_to_consider:
+            return sub_seg
+
+        return -1
 
     def get_current_sub_seg(self, event):
         return int(node_from_key(event, 'subsegment').attrib['value'])
@@ -75,13 +98,22 @@ class Velocity_Regulation_Problem(Problem):
     def parse_run(self, event):
         # attributes
         segment = self.get_current_segment(event)
-        sub_segment = self.get_current_sub_seg(event)
+        sub_segment = self.avoid_one_sub_segment(event, 11)
+
+        # segment = self.get_current_segment(event)
+        # sub_segment = self.get_current_sub_seg(event)
 
         segment_and_subsegment_to_add = str(segment) + str(sub_segment)
 
-        if segment == False:
+        # print(f"Segment: {segment}, subsegment: {sub_segment}")
+
+        if sub_segment == -1:
+            return
+        if segment == -1:
             # in case the function above returns False, we don't need to parse this run
             return
+
+        print(f"Segment: {segment}, subsegment: {sub_segment}")
 
         self.segments_in_runs[-1].append(segment)
         self.sub_segments_in_runs[-1].append(segment_and_subsegment_to_add)
@@ -128,8 +160,6 @@ class Velocity_Regulation_Problem(Problem):
             self.sub_segments_in_runs.append([])
             self.actions_in_runs.append([])
             self.belief_in_runs.append([])
-            
-            print(len(trace.findall('xes:event', XES_NES)))
 
             for event in trace.findall('xes:event', XES_NES):
                 self.parse_run(event)

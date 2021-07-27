@@ -6,7 +6,7 @@ class DummyVar:
     rule, run and step is codified by the variable.
     """
 
-    def __init__(self, literal, run, step, rule_num=None):
+    def __init__(self, literal, rule_num, run, step):
         self.literal = literal
         self.run = run
         self.step = step

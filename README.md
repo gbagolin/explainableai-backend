@@ -1,10 +1,10 @@
 # Explainable AI backend
 
-A new cool web app made for ai expert, to have an insight of the policy created by the POMCP algorithm. 
-This repository contains only the backend part of the the web app.
+The backend of Explainable AI written in Python using FastAPI. 
 
 ## Install
 
+I suggest you to create a conda environment first. 
 In the project directory, you can run:
 
 `pip install -r requirements.txt`
